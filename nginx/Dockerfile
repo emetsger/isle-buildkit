@@ -29,3 +29,5 @@ RUN --mount=type=cache,target=/var/cache/apk \
     cleanup.sh
 
 COPY rootfs /
+
+RUN mkdir /var/sqlite && chmod 777 /var/sqlite
