@@ -20,4 +20,6 @@ WORKDIR /var/www/drupal
 
 COPY rootfs /
 
+VOLUME /var/sqlite
+
 EXPOSE 80
