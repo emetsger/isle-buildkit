@@ -11,7 +11,13 @@ readonly CONFD_POLLING_INTERVAL=${CONFD_POLLING_INTERVAL:-5}
 echo "Looking for etcd server... http://${ETCD_HOST}:${ETCD_HOST_PORT}"
 if timeout ${ETCD_CONNECTION_TIMEOUT} wait-for-open-port.sh ${ETCD_HOST} ${ETCD_HOST_PORT} &> /dev/null; then
   echo "Found etcd server..."
-  confd -log-level ${CONFD_LOG_LEVEL} -interval ${CONFD_POLLING_INTERVAL} -backend etcdv3 -node ${ETCD_HOST}:${ETCD_HOST_PORT}
+  if [ ${CONFD_NOOP} == true ] ;
+  then
+    echo "WARNING confd: noop execution! (CONFD_NOOP == true)"
+    confd -noop -log-level ${CONFD_LOG_LEVEL} -interval ${CONFD_POLLING_INTERVAL} -backend etcdv3 -node ${ETCD_HOST}:${ETCD_HOST_PORT}
+  else
+    confd -log-level ${CONFD_LOG_LEVEL} -interval ${CONFD_POLLING_INTERVAL} -backend etcdv3 -node ${ETCD_HOST}:${ETCD_HOST_PORT}
+  fi
 else 
   echo "Timeout exceeded using env backend..."
   if [ ${CONFD_NOOP} == true ] ;
